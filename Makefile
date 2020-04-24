@@ -22,8 +22,8 @@ SCHEMA_VCS_REF = $(shell git rev-parse --short HEAD)
 
 SCHEMA_BUILD_DATE = $(shell date -u +'%Y-%m-%dT%H:%M:%SZ')
 
-SCHEMA_BUILD_VERSION = your app version - framework specyfic
-SCHEMA_CMD = the command your run this container with
+SCHEMA_BUILD_VERSION = 
+SCHEMA_CMD = 
 
 all: push
 
@@ -39,11 +39,28 @@ image:
 		--build-arg SCHEMA_BUILD_DATE="$(SCHEMA_BUILD_DATE)" \
 		--build-arg SCHEMA_BUILD_VERSION="$(SCHEMA_BUILD_VERSION)" \
 		--build-arg SCHEMA_CMD="$(SCHEMA_CMD)" \
+		--tag kamsza/$(REPO_NAME):latest .\
 	
   # TODO: last part of this command that tags just built image with a specyfic tag
-	
-push: image
+	docker build \
+		--build-arg SCHEMA_NAME="$(SCHEMA_NAME)" \
+		--build-arg SCHEMA_DESCRIPTION="$(SCHEMA_DESCRIPTION)" \
+		--build-arg SCHEMA_URL="$(SCHEMA_URL)" \
+		--build-arg SCEHMA_VENDOR="$(SCEHMA_VENDOR)" \
+		--build-arg SCHEMA_VSC_URL="$(SCHEMA_VSC_URL)" \
+		--build-arg SCHEMA_VCS_REF="$(SCHEMA_VCS_REF)" \
+		--build-arg SCHEMA_BUILD_DATE="$(SCHEMA_BUILD_DATE)" \
+		--build-arg SCHEMA_BUILD_VERSION="$(SCHEMA_BUILD_VERSION)" \
+		--build-arg SCHEMA_CMD="$(SCHEMA_CMD)" \
+		--tag kamsza/$(REPO_NAME):sza .\
+
+
+
+push: 
 	# TODO: two commands, first pushes the latest image, second pushes the image tagged with specyfic tag
+	docker login
+	docker push kamsza/$(REPO_NAME):latest
+	docker push kamsza/$(REPO_NAME):sza
 	
 clean:
 
